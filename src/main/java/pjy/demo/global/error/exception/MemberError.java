@@ -4,11 +4,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-@RequiredArgsConstructor
 @Getter
-public enum ClientError implements ErrorCode{
+@RequiredArgsConstructor
+public enum MemberError implements ErrorCode{
 
-    INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "Invalid parameter included");
+    MEMBER_CONFLICT_ERROR(HttpStatus.CONFLICT, "중복된 회원이 존재합니다.");
+
 
     private final HttpStatus httpStatus;
     private final String message;

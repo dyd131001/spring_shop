@@ -6,10 +6,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum SystemError implements ErrorCode{
-
-    UNCHECKED_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "에러 확인이 필요합니다."),
-    MEMBER_CONFLICT_ERROR(HttpStatus.CONFLICT, "중복된 회원이 존재합니다.");
+public enum CommonError implements ErrorCode{
+    INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "Invalid parameter included"),
+    UNCHECKED_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "에러 확인이 필요합니다.");
 
 
     private final HttpStatus httpStatus;

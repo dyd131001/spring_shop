@@ -1,25 +1,30 @@
 package pjy.demo.domain.member.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.util.Locale;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.FilterChain;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import pjy.demo.domain.member.dto.MemberDTO;
 import pjy.demo.domain.member.entity.Member;
 import pjy.demo.domain.member.service.MemberService;
-import pjy.demo.global.common.response.ResponseDto;
+import pjy.demo.global.common.response.ErrorResponseDTO;
+import pjy.demo.global.common.response.ResponseDTO;
+import pjy.demo.global.error.exception.ApiErrorExample;
+import pjy.demo.global.error.exception.CommonError;
 
-@Controller
+@Tag(name="member" , description = "회원 API")
+@RestController
 @Slf4j
+@RequestMapping("/member")
 public class MemberController {
     private MemberService memberService;
 
@@ -27,17 +32,24 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @PostMapping("/member/new")
-    @ResponseBody
-    public ResponseEntity<ResponseDto> create(MemberDTO memberDTO){
+    @PostMapping("/new")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "회원가입 성공", content = @Content(schema = @Schema(implementation = ResponseDTO.class))),
+//            @ApiResponse(responseCode = "409", description = "존재하는 아이디가 있습니다.", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))),
+//            @ApiResponse(responseCode = "400", description = "validation 오류.", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
+//    })
+    @ApiErrorExample(CommonError.class)
+    @Operation(summary = "회원 등록" , description = "이름을 이용하여 중복을 검증하고 회원을 추가합니다.")
+    public ResponseEntity<ResponseDTO> create(@RequestBody MemberDTO memberDTO){
+        log.info("request={}", memberDTO);
         Member member = Member.builder()
-                .name(memberDTO.getName())
+                .name(memberDTO.getMemberName())
                 .build();
         memberService.join(member);
 
         return ResponseEntity
                 .ok()
-                .body(ResponseDto.of(member, "유저 등록"));
+                .body(ResponseDTO.of(member, "유저 등록"));
     }
 
 

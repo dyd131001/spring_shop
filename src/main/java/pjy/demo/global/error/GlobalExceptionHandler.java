@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import pjy.demo.global.common.response.ErrorResponseDto;
+import pjy.demo.global.common.response.ErrorResponseDTO;
 import pjy.demo.global.error.exception.ApiException;
-import pjy.demo.global.error.exception.ClientError;
 import pjy.demo.global.error.exception.ErrorCode;
-import pjy.demo.global.error.exception.SystemError;
+import pjy.demo.global.error.exception.CommonError;
 
 @RestControllerAdvice
 @Slf4j
@@ -36,7 +35,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<Object> handleExecptionInternal(ErrorCode errorCode){
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(ErrorResponseDto.of(errorCode));
+                .body(ErrorResponseDTO.of(errorCode));
     }
 
 
@@ -51,14 +50,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException e, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         log.warn("handleIllegalArgument", e);
-        ErrorCode errorCode = ClientError.INVALID_PARAMETER;
+        ErrorCode errorCode = CommonError.INVALID_PARAMETER;
         return handleExceptionInternal(e,errorCode);
     }
 
     private ResponseEntity<Object> handleExceptionInternal(MethodArgumentNotValidException e, ErrorCode errorCode) {
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(ErrorResponseDto.of(e, errorCode));
+                .body(ErrorResponseDTO.of(e, errorCode));
     }
 
 
@@ -66,7 +65,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handleAllException(Exception ex) {
         log.warn("handleAllException", ex);
-        ErrorCode errorCode = SystemError.UNCHECKED_SERVER_ERROR;
+        ErrorCode errorCode = CommonError.UNCHECKED_SERVER_ERROR;
         return handleExecptionInternal(errorCode);
     }
 

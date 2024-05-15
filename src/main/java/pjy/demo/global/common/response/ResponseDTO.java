@@ -17,14 +17,14 @@ import lombok.Getter;
  */
 @Getter
 @Builder
-public class ResponseDto<T> {
+public class ResponseDTO<T> {
     private final Boolean success;
     private final String category;
     private final String message;
     private final T data;
 
-    public static <T> ResponseDto<T> of(T data , String message){
-        return ResponseDto.<T>builder()
+    public static <T> ResponseDTO<T> of(T data , String message){
+        return ResponseDTO.<T>builder()
                 .success(true)
                 .category("OK")
                 .message(message) // 수행 기능 적기
@@ -32,8 +32,8 @@ public class ResponseDto<T> {
                 .build();
     }
 
-    public static <T> ResponseDto<T> of(T data){
-        return ResponseDto.<T>builder()
+    public static <T> ResponseDTO<T> of(T data){
+        return ResponseDTO.<T>builder()
                 .success(true)
                 .category("OK")
                 .message("") // 수행 기능 적기
